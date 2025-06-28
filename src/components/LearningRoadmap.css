@@ -1,0 +1,385 @@
+/* LearningRoadmap.css */
+.learning-roadmap {
+  padding: 2rem 0;
+}
+
+.roadmap-header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.roadmap-header h2 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--primary-black);
+  margin-bottom: 1rem;
+}
+
+.roadmap-header p {
+  font-size: 1.125rem;
+  color: var(--dark-gray);
+  margin: 0;
+}
+
+.roadmap-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.roadmap-timeline {
+  position: relative;
+}
+
+.roadmap-timeline::before {
+  content: '';
+  position: absolute;
+  left: 30px;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: linear-gradient(to bottom, var(--primary-black), var(--accent-gray));
+  border-radius: 2px;
+}
+
+.roadmap-phase {
+  position: relative;
+  margin-bottom: 3rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.roadmap-phase:hover {
+  transform: translateX(5px);
+}
+
+.roadmap-phase.active {
+  transform: translateX(10px);
+}
+
+.phase-marker {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 2;
+}
+
+.phase-number {
+  width: 60px;
+  height: 60px;
+  background: var(--primary-black);
+  color: var(--white);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  font-weight: 700;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
+}
+
+.roadmap-phase.active .phase-number {
+  background: var(--secondary-black);
+  transform: scale(1.1);
+}
+
+.phase-connector {
+  position: absolute;
+  left: 50%;
+  top: 60px;
+  width: 3px;
+  height: 40px;
+  background: var(--border-gray);
+  transform: translateX(-50%);
+}
+
+.phase-content {
+  margin-left: 100px;
+  background: var(--white);
+  border-radius: 16px;
+  padding: 2rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  border: 1px solid var(--border-gray);
+  transition: all 0.3s ease;
+}
+
+.roadmap-phase.active .phase-content {
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+  border-color: var(--primary-black);
+}
+
+.phase-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--primary-black);
+  margin-bottom: 0.5rem;
+}
+
+.phase-duration {
+  color: var(--dark-gray);
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin-bottom: 1.5rem;
+}
+
+.phase-topics {
+  display: grid;
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.topic-card {
+  background: var(--light-gray);
+  border-radius: 12px;
+  padding: 1.5rem;
+  border: 2px solid transparent;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.topic-card:hover {
+  border-color: var(--accent-gray);
+  transform: translateY(-2px);
+}
+
+.topic-card.selected {
+  border-color: var(--primary-black);
+  background: var(--white);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.topic-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+}
+
+.topic-header h4 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--primary-black);
+  margin: 0;
+}
+
+.topic-duration {
+  background: var(--primary-black);
+  color: var(--white);
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.topic-description {
+  color: var(--dark-gray);
+  line-height: 1.6;
+  margin: 0 0 1rem 0;
+}
+
+.topic-details {
+  border-top: 1px solid var(--border-gray);
+  padding-top: 1.5rem;
+  margin-top: 1rem;
+}
+
+.skills-section,
+.projects-section,
+.resources-section {
+  margin-bottom: 1.5rem;
+}
+
+.skills-section h5,
+.projects-section h5,
+.resources-section h5 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--primary-black);
+  margin-bottom: 0.75rem;
+}
+
+.skills-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.skill-tag {
+  background: var(--primary-black);
+  color: var(--white);
+  padding: 0.375rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.projects-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.projects-list li {
+  padding: 0.5rem 0;
+  color: var(--dark-gray);
+  border-bottom: 1px solid var(--border-gray);
+  position: relative;
+  padding-left: 1.5rem;
+}
+
+.projects-list li::before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  color: var(--primary-black);
+  font-weight: bold;
+}
+
+.projects-list li:last-child {
+  border-bottom: none;
+}
+
+.resources-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.resource-link {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  background: var(--light-gray);
+  border-radius: 8px;
+  text-decoration: none;
+  color: var(--primary-black);
+  transition: all 0.3s ease;
+  border: 1px solid var(--border-gray);
+}
+
+.resource-link:hover {
+  background: var(--white);
+  border-color: var(--primary-black);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.resource-type {
+  background: var(--primary-black);
+  color: var(--white);
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.625rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  min-width: 60px;
+  text-align: center;
+}
+
+.resource-name {
+  font-weight: 500;
+  flex: 1;
+}
+
+.roadmap-summary {
+  margin-top: 3rem;
+  text-align: center;
+}
+
+.summary-stats {
+  display: flex;
+  justify-content: center;
+  gap: 3rem;
+}
+
+.stat {
+  text-align: center;
+}
+
+.stat-number {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--primary-black);
+  margin-bottom: 0.5rem;
+}
+
+.stat-label {
+  color: var(--dark-gray);
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.roadmap-error {
+  text-align: center;
+  padding: 3rem;
+  color: var(--dark-gray);
+  font-size: 1.125rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .roadmap-timeline::before {
+    left: 20px;
+  }
+  
+  .phase-number {
+    width: 40px;
+    height: 40px;
+    font-size: 1.125rem;
+  }
+  
+  .phase-content {
+    margin-left: 60px;
+    padding: 1.5rem;
+  }
+  
+  .phase-title {
+    font-size: 1.5rem;
+  }
+  
+  .summary-stats {
+    gap: 2rem;
+  }
+  
+  .stat-number {
+    font-size: 2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .roadmap-header h2 {
+    font-size: 2rem;
+  }
+  
+  .phase-content {
+    margin-left: 50px;
+    padding: 1rem;
+  }
+  
+  .topic-card {
+    padding: 1rem;
+  }
+  
+  .topic-header {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .skills-list {
+    gap: 0.25rem;
+  }
+  
+  .skill-tag {
+    font-size: 0.625rem;
+    padding: 0.25rem 0.5rem;
+  }
+  
+  .summary-stats {
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+} 

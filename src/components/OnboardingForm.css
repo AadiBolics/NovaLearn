@@ -1,0 +1,254 @@
+/* OnboardingForm.css */
+.onboarding-container {
+  min-height: calc(100vh - 80px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1rem;
+  background: var(--light-gray);
+}
+
+.onboarding-content {
+  width: 100%;
+  max-width: 600px;
+}
+
+.onboarding-header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.onboarding-header h1 {
+  font-size: 3rem;
+  font-weight: 700;
+  color: var(--primary-black);
+  margin-bottom: 1rem;
+}
+
+.onboarding-header p {
+  font-size: 1.25rem;
+  color: var(--dark-gray);
+  margin: 0;
+}
+
+.onboarding-form {
+  background: var(--white);
+  border-radius: 16px;
+  padding: 3rem;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+  border: 1px solid var(--border-gray);
+}
+
+.form-section {
+  margin-bottom: 2rem;
+}
+
+.form-label {
+  display: block;
+  font-weight: 600;
+  color: var(--primary-black);
+  margin-bottom: 0.75rem;
+  font-size: 1.125rem;
+}
+
+.form-control {
+  width: 100%;
+  padding: 1rem;
+  border: 2px solid var(--border-gray);
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  background: var(--white);
+  color: var(--primary-black);
+}
+
+.form-control:focus {
+  outline: none;
+  border-color: var(--primary-black);
+  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1);
+}
+
+.form-control::placeholder {
+  color: var(--accent-gray);
+}
+
+.form-help {
+  display: block;
+  margin-top: 0.5rem;
+  font-size: 0.875rem;
+  color: var(--dark-gray);
+}
+
+.learning-style-options {
+  display: grid;
+  gap: 1rem;
+}
+
+.style-option {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1.5rem;
+  border: 2px solid var(--border-gray);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background: var(--white);
+}
+
+.style-option:hover {
+  border-color: var(--accent-gray);
+  transform: translateY(-1px);
+}
+
+.style-option input[type="radio"] {
+  margin: 0;
+  margin-top: 0.25rem;
+  accent-color: var(--primary-black);
+  transform: scale(1.2);
+}
+
+.style-option input[type="radio"]:checked + .option-content {
+  color: var(--primary-black);
+}
+
+.style-option:has(input[type="radio"]:checked) {
+  border-color: var(--primary-black);
+  background: var(--light-gray);
+}
+
+.option-content {
+  flex: 1;
+}
+
+.option-content h4 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--primary-black);
+  margin: 0 0 0.5rem 0;
+}
+
+.option-content p {
+  font-size: 0.875rem;
+  color: var(--dark-gray);
+  margin: 0;
+  line-height: 1.5;
+}
+
+.error-message {
+  background: #fee;
+  color: #c33;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  border: 1px solid #fcc;
+  font-size: 0.875rem;
+}
+
+.submit-button {
+  width: 100%;
+  background: var(--primary-black);
+  color: var(--white);
+  border: none;
+  border-radius: 12px;
+  padding: 1.25rem;
+  font-size: 1.125rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.submit-button:hover {
+  background: var(--secondary-black);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.submit-button:disabled {
+  background: var(--border-gray);
+  color: var(--accent-gray);
+  cursor: not-allowed;
+  transform: none;
+}
+
+.loading-section {
+  text-align: center;
+  background: var(--white);
+  border-radius: 16px;
+  padding: 3rem;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+  border: 1px solid var(--border-gray);
+}
+
+.loading-section h2 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--primary-black);
+  margin: 2rem 0 1rem 0;
+}
+
+.loading-section p {
+  font-size: 1.125rem;
+  color: var(--dark-gray);
+  margin: 0;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .onboarding-container {
+    padding: 1rem;
+  }
+  
+  .onboarding-header h1 {
+    font-size: 2.5rem;
+  }
+  
+  .onboarding-form {
+    padding: 2rem;
+  }
+  
+  .style-option {
+    padding: 1rem;
+  }
+  
+  .option-content h4 {
+    font-size: 1rem;
+  }
+  
+  .option-content p {
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .onboarding-header h1 {
+    font-size: 2rem;
+  }
+  
+  .onboarding-header p {
+    font-size: 1rem;
+  }
+  
+  .onboarding-form {
+    padding: 1.5rem;
+  }
+  
+  .form-label {
+    font-size: 1rem;
+  }
+  
+  .submit-button {
+    padding: 1rem;
+    font-size: 1rem;
+  }
+  
+  .loading-section {
+    padding: 2rem;
+  }
+  
+  .loading-section h2 {
+    font-size: 1.5rem;
+  }
+} 

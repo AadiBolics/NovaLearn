@@ -1,0 +1,148 @@
+/* Global CSS - Shared styles and variables */
+:root {
+  --primary-black: #1a1a1a;
+  --secondary-black: #2d2d2d;
+  --light-gray: #f8f9fa;
+  --medium-gray: #e9ecef;
+  --dark-gray: #6c757d;
+  --white: #ffffff;
+  --accent-gray: #adb5bd;
+  --border-gray: #dee2e6;
+}
+
+* {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: var(--light-gray);
+  color: var(--primary-black);
+}
+
+#root {
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+  text-align: left;
+  min-height: 100vh;
+}
+
+.App {
+  min-height: 100vh;
+  background-color: var(--light-gray);
+  color: var(--primary-black);
+  display: flex;
+  flex-direction: column;
+}
+
+/* Navigation Styles */
+.navbar {
+  border-bottom: 1px solid var(--border-gray);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  background-color: var(--white) !important;
+  padding: 0.75rem 0;
+}
+
+.navbar-brand {
+  font-weight: 600;
+  font-size: 1.25rem;
+  color: var(--primary-black) !important;
+  letter-spacing: -0.025em;
+}
+
+.navbar-nav .nav-link {
+  color: var(--dark-gray) !important;
+  font-weight: 500;
+  font-size: 0.875rem;
+  transition: color 0.2s ease;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  margin: 0 0.25rem;
+}
+
+.navbar-nav .nav-link:hover {
+  color: var(--primary-black) !important;
+  background-color: var(--light-gray);
+}
+
+.navbar-nav .nav-link.active {
+  color: var(--primary-black) !important;
+  background-color: var(--light-gray);
+  font-weight: 600;
+}
+
+.navbar-text {
+  color: var(--dark-gray) !important;
+  font-weight: 500;
+  font-size: 0.875rem;
+}
+
+/* Container Styles */
+.container {
+  flex: 1;
+  max-width: 100%;
+  padding: 2rem 1rem;
+  margin: 0 auto;
+  width: 100%;
+}
+
+@media (min-width: 640px) {
+  .container {
+    padding: 3rem 2rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .container {
+    padding: 4rem 3rem;
+    max-width: 1400px;
+  }
+}
+
+@media (min-width: 1440px) {
+  .container {
+    padding: 4rem 4rem;
+    max-width: 1600px;
+  }
+}
+
+/* Utility Classes */
+.text-center {
+  text-align: center;
+}
+
+.mb-0 {
+  margin-bottom: 0;
+}
+
+.mb-4 {
+  margin-bottom: 1.5rem;
+}
+
+.d-flex {
+  display: flex;
+}
+
+.justify-content-center {
+  justify-content: center;
+}
+
+.align-items-center {
+  align-items: center;
+}
+
+.gap-2 {
+  gap: 0.5rem;
+}
+
+/* Responsive utilities */
+@media (max-width: 768px) {
+  .container {
+    padding: 1.5rem 1rem;
+  }
+} 
