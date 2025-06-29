@@ -8,35 +8,39 @@ const OnboardingForm = () => {
   const navigate = useNavigate();
   const { setModules } = useModules();
   const [selectedExam, setSelectedExam] = useState('');
-  const [showAnimation, setShowAnimation] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
 
-  const handleExamSelect = async (examType) => {
+  const handleExamSelection = async (examType) => {
     setSelectedExam(examType);
-    setShowAnimation(true);
-    
-    // Add a small delay for the selection animation
-    setTimeout(async () => {
-      try {
-        // Get syllabus and create modules
-        const syllabusData = await jeeNeetService.getSyllabus(examType);
-        
-        // Create modules from syllabus
+    setIsLoading(true);
+    setError('');
+
+    try {
+      // Get syllabus data for the selected exam
+      const syllabusData = await jeeNeetService.getSyllabus(examType);
+      
+      if (syllabusData && syllabusData.syllabus) {
+        // Convert syllabus to modules format
         const modules = [];
-        Object.entries(syllabusData.syllabus.subjects).forEach(([subjectKey, subject]) => {
-          subject.chapters.forEach((chapter, index) => {
+        const subjects = syllabusData.syllabus.subjects;
+        
+        Object.keys(subjects).forEach(subjectKey => {
+          const subject = subjects[subjectKey];
+          subject.chapters.forEach(chapter => {
             modules.push({
-              id: `${subjectKey}-${index}`,
-              title: chapter.name,
-              description: `${chapter.name} - ${chapter.topics.join(', ')}`,
+              id: `${subjectKey}-${chapter.name.toLowerCase().replace(/\s+/g, '-')}`,
+              name: chapter.name,
               subject: subject.name,
+              examType: examType,
               weightage: chapter.weightage,
               difficulty: chapter.difficulty,
               priority: chapter.priority,
               topics: chapter.topics,
-              examType: examType,
-              targetYear: '2025',
-              currentLevel: 'beginner',
-              studyHours: '2-4'
+              completed: false,
+              progress: 0,
+              estimatedHours: Math.ceil(chapter.weightage * 2), // Rough estimate
+              resources: []
             });
           });
         });
@@ -44,186 +48,134 @@ const OnboardingForm = () => {
         // Sort modules by priority and weightage
         modules.sort((a, b) => {
           const priorityOrder = { 'very_high': 4, 'high': 3, 'medium': 2, 'low': 1 };
-          return priorityOrder[b.priority] - priorityOrder[a.priority] || b.weightage - a.weightage;
+          const aPriority = priorityOrder[a.priority] || 1;
+          const bPriority = priorityOrder[b.priority] || 1;
+          
+          if (aPriority !== bPriority) {
+            return bPriority - aPriority;
+          }
+          return b.weightage - a.weightage;
         });
 
         setModules(modules);
         navigate('/dashboard');
-      } catch (error) {
-        console.error('Error creating learning path:', error);
-        // Fallback to basic modules
-        const fallbackModules = [
-          {
-            id: 'physics-1',
-            title: 'Physics Fundamentals',
-            description: 'Core physics concepts for JEE/NEET',
-            subject: 'Physics',
-            weightage: 25,
-            difficulty: 'medium',
-            priority: 'high',
-            examType: examType,
-            targetYear: '2025',
-            currentLevel: 'beginner',
-            studyHours: '2-4'
-          },
-          {
-            id: 'chemistry-1',
-            title: 'Chemistry Basics',
-            description: 'Essential chemistry topics',
-            subject: 'Chemistry',
-            weightage: 25,
-            difficulty: 'medium',
-            priority: 'high',
-            examType: examType,
-            targetYear: '2025',
-            currentLevel: 'beginner',
-            studyHours: '2-4'
-          }
-        ];
-        setModules(fallbackModules);
-        navigate('/dashboard');
+      } else {
+        setError('Unable to load syllabus data. Please try again.');
       }
-    }, 800);
+    } catch (err) {
+      console.error('Error during onboarding:', err);
+      setError('An error occurred while setting up your learning path. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
     <div className="onboarding-container">
       <div className="onboarding-background">
         <div className="floating-shapes">
-          <div className="shape shape-1">📚</div>
-          <div className="shape shape-2">🎯</div>
-          <div className="shape shape-3">⚡</div>
-          <div className="shape shape-4">🏆</div>
-          <div className="shape shape-5">💡</div>
+          <div className="shape shape-1"></div>
+          <div className="shape shape-2"></div>
+          <div className="shape shape-3"></div>
+          <div className="shape shape-4"></div>
         </div>
       </div>
 
-      <div className={`onboarding-card ${showAnimation ? 'animate' : ''}`}>
-        <div className="card-header">
-          <div className="logo-section">
-            <div className="logo-icon">🚀</div>
-            <h1 className="app-title">NovaLearn</h1>
+      <div className="onboarding-content">
+        <div className="onboarding-card glass-card elevated">
+          <div className="onboarding-header">
+            <h1 className="onboarding-title">Welcome to NovaLearn</h1>
+            <p className="onboarding-subtitle">
+              Your AI-powered companion for JEE & NEET preparation
+            </p>
           </div>
-          <p className="app-subtitle">Your AI-powered JEE/NEET preparation companion</p>
-        </div>
 
-        {!showAnimation ? (
-          <div className="exam-selection">
-            <div className="selection-header">
+          <div className="onboarding-body">
+            <div className="exam-selection">
               <h2>Choose Your Exam</h2>
-              <p>Select the exam you're preparing for to get started</p>
-            </div>
-
-            <div className="exam-options">
-              <div 
-                className={`exam-option ${selectedExam === 'jee' ? 'selected' : ''}`}
-                onClick={() => handleExamSelect('jee')}
-              >
-                <div className="exam-icon">⚡</div>
-                <div className="exam-content">
-                  <h3>JEE (Joint Entrance Examination)</h3>
-                  <p>For engineering aspirants - IITs, NITs, and other top engineering colleges</p>
-                  <div className="exam-details">
-                    <div className="detail-item">
-                      <span className="detail-label">Subjects:</span>
-                      <span className="detail-value">Physics, Chemistry, Mathematics</span>
-                    </div>
-                    <div className="detail-item">
-                      <span className="detail-label">Duration:</span>
-                      <span className="detail-value">3 hours</span>
-                    </div>
-                    <div className="detail-item">
-                      <span className="detail-label">Total Marks:</span>
-                      <span className="detail-value">300</span>
+              <p>Select the exam you're preparing for to get started with your personalized learning journey.</p>
+              
+              <div className="exam-options">
+                <button
+                  className={`exam-option glass-card interactive ${selectedExam === 'jee' ? 'selected' : ''}`}
+                  onClick={() => handleExamSelection('jee')}
+                  disabled={isLoading}
+                >
+                  <div className="exam-icon">🎯</div>
+                  <div className="exam-info">
+                    <h3>JEE Main & Advanced</h3>
+                    <p>Joint Entrance Examination for Engineering</p>
+                    <div className="exam-details">
+                      <span>Physics • Chemistry • Mathematics</span>
                     </div>
                   </div>
-                </div>
-                <div className="selection-indicator">
-                  {selectedExam === 'jee' ? '✓' : '→'}
-                </div>
-              </div>
+                </button>
 
-              <div 
-                className={`exam-option ${selectedExam === 'neet' ? 'selected' : ''}`}
-                onClick={() => handleExamSelect('neet')}
-              >
-                <div className="exam-icon">🏥</div>
-                <div className="exam-content">
-                  <h3>NEET (National Eligibility cum Entrance Test)</h3>
-                  <p>For medical aspirants - MBBS, BDS, and other medical courses</p>
-                  <div className="exam-details">
-                    <div className="detail-item">
-                      <span className="detail-label">Subjects:</span>
-                      <span className="detail-value">Physics, Chemistry, Biology</span>
-                    </div>
-                    <div className="detail-item">
-                      <span className="detail-label">Duration:</span>
-                      <span className="detail-value">3 hours 20 minutes</span>
-                    </div>
-                    <div className="detail-item">
-                      <span className="detail-label">Total Marks:</span>
-                      <span className="detail-value">720</span>
+                <button
+                  className={`exam-option glass-card interactive ${selectedExam === 'neet' ? 'selected' : ''}`}
+                  onClick={() => handleExamSelection('neet')}
+                  disabled={isLoading}
+                >
+                  <div className="exam-icon">🏥</div>
+                  <div className="exam-info">
+                    <h3>NEET</h3>
+                    <p>National Eligibility cum Entrance Test</p>
+                    <div className="exam-details">
+                      <span>Physics • Chemistry • Biology</span>
                     </div>
                   </div>
-                </div>
-                <div className="selection-indicator">
-                  {selectedExam === 'neet' ? '✓' : '→'}
-                </div>
+                </button>
               </div>
+
+              {error && (
+                <div className="error-message status-error">
+                  <p>{error}</p>
+                </div>
+              )}
+
+              {isLoading && (
+                <div className="loading-section">
+                  <div className="loading-spinner"></div>
+                  <p>Setting up your personalized learning path...</p>
+                </div>
+              )}
             </div>
 
-            <div className="features-preview">
+            <div className="onboarding-features">
               <h3>What you'll get:</h3>
               <div className="features-grid">
                 <div className="feature-item">
-                  <div className="feature-icon">📊</div>
-                  <span>Personalized Study Plan</span>
-                </div>
-                <div className="feature-item">
-                  <div className="feature-icon">🎯</div>
-                  <span>Priority-based Topics</span>
+                  <div className="feature-icon">🗺️</div>
+                  <div className="feature-text">
+                    <h4>Personalized Roadmap</h4>
+                    <p>AI-generated study plan tailored to your exam</p>
+                  </div>
                 </div>
                 <div className="feature-item">
                   <div className="feature-icon">📚</div>
-                  <span>Top Indian Resources</span>
+                  <div className="feature-text">
+                    <h4>Curated Resources</h4>
+                    <p>Best study materials from top Indian platforms</p>
+                  </div>
                 </div>
                 <div className="feature-item">
-                  <div className="feature-icon">📈</div>
-                  <span>Progress Tracking</span>
+                  <div className="feature-icon">🤖</div>
+                  <div className="feature-text">
+                    <h4>AI Study Assistant</h4>
+                    <p>24/7 support for doubts and motivation</p>
+                  </div>
+                </div>
+                <div className="feature-item">
+                  <div className="feature-icon">📊</div>
+                  <div className="feature-text">
+                    <h4>Progress Tracking</h4>
+                    <p>Monitor your learning journey with detailed analytics</p>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        ) : (
-          <div className="loading-section">
-            <div className="loading-animation">
-              <div className="loading-spinner"></div>
-              <div className="loading-text">
-                <h3>Creating Your Learning Path</h3>
-                <p>Analyzing {selectedExam.toUpperCase()} syllabus and preparing your personalized study plan...</p>
-              </div>
-            </div>
-            
-            <div className="loading-steps">
-              <div className="step-item">
-                <div className="step-icon">📋</div>
-                <span>Analyzing syllabus structure</span>
-              </div>
-              <div className="step-item">
-                <div className="step-icon">🎯</div>
-                <span>Prioritizing topics by weightage</span>
-              </div>
-              <div className="step-item">
-                <div className="step-icon">📚</div>
-                <span>Gathering learning resources</span>
-              </div>
-              <div className="step-item">
-                <div className="step-icon">✅</div>
-                <span>Finalizing your roadmap</span>
-              </div>
-            </div>
-          </div>
-        )}
+        </div>
       </div>
     </div>
   );

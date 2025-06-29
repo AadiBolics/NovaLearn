@@ -118,6 +118,10 @@ const StudyChatbot = () => {
     }
   };
 
+  const closeChat = () => {
+    setIsOpen(false);
+  };
+
   const clearChat = () => {
     setMessages([]);
     aiChatbotService.clearHistory();
@@ -138,101 +142,107 @@ const StudyChatbot = () => {
         {isOpen ? '✕' : '💬'}
       </button>
 
-      {/* Chat window */}
+      {/* Overlay and Chat window */}
       {isOpen && (
-        <div className="chatbot-window">
-          <div className="chatbot-header">
-            <div className="chatbot-title">
-              <span className="chatbot-icon">🎓</span>
-              <div>
-                <h3>NovaLearn Assistant</h3>
-                <p>Your AI Study Companion</p>
+        <>
+          {/* Backdrop overlay */}
+          <div className="chatbot-overlay" onClick={closeChat}></div>
+          
+          {/* Chat window */}
+          <div className="chatbot-window" onClick={(e) => e.stopPropagation()}>
+            <div className="chatbot-header">
+              <div className="chatbot-title">
+                <span className="chatbot-icon">🎓</span>
+                <div>
+                  <h3>NovaLearn Assistant</h3>
+                  <p>Your AI Study Companion</p>
+                </div>
+              </div>
+              <div className="chatbot-actions">
+                <button 
+                  className="clear-chat-btn"
+                  onClick={clearChat}
+                  title="Clear chat"
+                >
+                  🗑️
+                </button>
+                <button 
+                  className="close-chat-btn"
+                  onClick={closeChat}
+                  title="Close chat"
+                >
+                  ✕
+                </button>
               </div>
             </div>
-            <div className="chatbot-actions">
-              <button 
-                className="clear-chat-btn"
-                onClick={clearChat}
-                title="Clear chat"
-              >
-                🗑️
-              </button>
-              <button 
-                className="close-chat-btn"
-                onClick={toggleChat}
-                title="Close chat"
-              >
-                ✕
-              </button>
-            </div>
-          </div>
 
-          <div className="chatbot-messages">
-            {messages.map((msg) => (
-              <div 
-                key={msg.id} 
-                className={`message ${msg.type === 'user' ? 'user-message' : 'bot-message'}`}
-              >
-                <div className="message-content">
-                  <p>{msg.message}</p>
-                  {msg.suggestions && msg.type === 'bot' && (
-                    <div className="message-suggestions">
-                      {msg.suggestions.map((suggestion, index) => (
-                        <button
-                          key={index}
-                          className="suggestion-btn"
-                          onClick={() => handleSuggestionClick(suggestion)}
-                        >
-                          {suggestion}
-                        </button>
-                      ))}
-                    </div>
-                  )}
-                </div>
-                <div className="message-timestamp">
-                  {msg.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                </div>
-              </div>
-            ))}
-            
-            {isTyping && (
-              <div className="message bot-message">
-                <div className="message-content">
-                  <div className="typing-indicator">
-                    <span></span>
-                    <span></span>
-                    <span></span>
+            <div className="chatbot-messages">
+              {messages.map((msg) => (
+                <div 
+                  key={msg.id} 
+                  className={`message ${msg.type === 'user' ? 'user-message' : 'bot-message'}`}
+                >
+                  <div className="message-content">
+                    <p>{msg.message}</p>
+                    {msg.suggestions && msg.type === 'bot' && (
+                      <div className="message-suggestions">
+                        {msg.suggestions.map((suggestion, index) => (
+                          <button
+                            key={index}
+                            className="suggestion-btn"
+                            onClick={() => handleSuggestionClick(suggestion)}
+                          >
+                            {suggestion}
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                  <div className="message-timestamp">
+                    {msg.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                   </div>
                 </div>
-              </div>
-            )}
-            
-            <div ref={messagesEndRef} />
-          </div>
+              ))}
+              
+              {isTyping && (
+                <div className="message bot-message">
+                  <div className="message-content">
+                    <div className="typing-indicator">
+                      <span></span>
+                      <span></span>
+                      <span></span>
+                    </div>
+                  </div>
+                </div>
+              )}
+              
+              <div ref={messagesEndRef} />
+            </div>
 
-          <div className="chatbot-input">
-            <div className="input-container">
-              <textarea
-                value={inputMessage}
-                onChange={(e) => setInputMessage(e.target.value)}
-                onKeyPress={handleKeyPress}
-                placeholder="Type your message..."
-                rows="1"
-                disabled={isTyping}
-              />
-              <button 
-                className="send-btn"
-                onClick={handleSendMessage}
-                disabled={!inputMessage.trim() || isTyping}
-              >
-                ➤
-              </button>
-            </div>
-            <div className="input-hint">
-              Press Enter to send, Shift+Enter for new line
+            <div className="chatbot-input">
+              <div className="input-container">
+                <textarea
+                  value={inputMessage}
+                  onChange={(e) => setInputMessage(e.target.value)}
+                  onKeyPress={handleKeyPress}
+                  placeholder="Type your message..."
+                  rows="1"
+                  disabled={isTyping}
+                />
+                <button 
+                  className="send-btn"
+                  onClick={handleSendMessage}
+                  disabled={!inputMessage.trim() || isTyping}
+                >
+                  ➤
+                </button>
+              </div>
+              <div className="input-hint">
+                Press Enter to send, Shift+Enter for new line
+              </div>
             </div>
           </div>
-        </div>
+        </>
       )}
     </div>
   );

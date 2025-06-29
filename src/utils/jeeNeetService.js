@@ -408,6 +408,73 @@ export class JeeNeetService {
           pricing: 'Subscription Based',
           topTeachers: ['Vedantu Faculty']
         },
+        // YouTube Channels
+        eduniti: {
+          name: 'Eduniti',
+          url: 'https://www.youtube.com/@eduniti',
+          type: 'youtube',
+          rating: 4.9,
+          subjects: ['Physics'],
+          features: ['Free Lectures', 'Problem Solving', 'Concept Building', 'JEE/NEET Focus'],
+          pricing: 'Free',
+          topTeachers: ['Mohit Tyagi'],
+          description: 'Excellent Physics channel by Mohit Tyagi Sir, perfect for JEE/NEET preparation with clear concepts and problem-solving techniques.'
+        },
+        physicsGalaxy: {
+          name: 'Physics Galaxy',
+          url: 'https://www.youtube.com/@PhysicsGalaxy',
+          type: 'youtube',
+          rating: 4.8,
+          subjects: ['Physics'],
+          features: ['Free Lectures', 'Problem Solving', 'Advanced Concepts'],
+          pricing: 'Free',
+          topTeachers: ['Ashish Arora'],
+          description: 'Comprehensive Physics lectures by Ashish Arora Sir covering all topics for JEE/NEET.'
+        },
+        chemistryGuruji: {
+          name: 'Chemistry Guruji',
+          url: 'https://www.youtube.com/@ChemistryGuruji',
+          type: 'youtube',
+          rating: 4.7,
+          subjects: ['Chemistry'],
+          features: ['Free Lectures', 'Organic Chemistry', 'Inorganic Chemistry', 'Physical Chemistry'],
+          pricing: 'Free',
+          topTeachers: ['Pradeep Sharma'],
+          description: 'Complete Chemistry coverage with focus on Organic Chemistry and problem-solving.'
+        },
+        mathongo: {
+          name: 'Mathongo',
+          url: 'https://www.youtube.com/@mathongo',
+          type: 'youtube',
+          rating: 4.6,
+          subjects: ['Mathematics'],
+          features: ['Free Lectures', 'Problem Solving', 'JEE Mathematics'],
+          pricing: 'Free',
+          topTeachers: ['Mathongo Faculty'],
+          description: 'Specialized Mathematics channel for JEE preparation with comprehensive problem-solving.'
+        },
+        biologySimplified: {
+          name: 'Biology Simplified',
+          url: 'https://www.youtube.com/@BiologySimplified',
+          type: 'youtube',
+          rating: 4.7,
+          subjects: ['Biology'],
+          features: ['Free Lectures', 'NEET Biology', 'Concept Building'],
+          pricing: 'Free',
+          topTeachers: ['Biology Faculty'],
+          description: 'Complete Biology coverage for NEET with simplified explanations and diagrams.'
+        },
+        khanAcademy: {
+          name: 'Khan Academy',
+          url: 'https://www.youtube.com/@khanacademy',
+          type: 'youtube',
+          rating: 4.5,
+          subjects: ['Physics', 'Chemistry', 'Mathematics', 'Biology'],
+          features: ['Free Lectures', 'Concept Building', 'Practice Problems'],
+          pricing: 'Free',
+          topTeachers: ['Khan Academy Faculty'],
+          description: 'Excellent for building strong fundamentals in all subjects.'
+        },
         wikipedia: {
           name: 'Wikipedia',
           url: 'https://wikipedia.org',
@@ -422,6 +489,41 @@ export class JeeNeetService {
 
       return resources;
     });
+  }
+
+  // Get related chapters for a subject
+  getRelatedChapters(examType, subjectName) {
+    const syllabus = examType === 'jee' ? this.getJEESyllabus() : this.getNEETSyllabus();
+    const subject = Object.values(syllabus.subjects).find(s => s.name === subjectName);
+    
+    if (!subject) return [];
+
+    // Define related chapters based on subject
+    const relatedChapters = {
+      'Physics': {
+        'Mechanics': ['Electromagnetism', 'Thermodynamics & Kinetic Theory'],
+        'Electromagnetism': ['Mechanics', 'Optics & Modern Physics'],
+        'Optics & Modern Physics': ['Electromagnetism', 'Mechanics'],
+        'Thermodynamics & Kinetic Theory': ['Mechanics', 'Electromagnetism']
+      },
+      'Chemistry': {
+        'Physical Chemistry': ['Organic Chemistry', 'Inorganic Chemistry'],
+        'Organic Chemistry': ['Physical Chemistry', 'Inorganic Chemistry'],
+        'Inorganic Chemistry': ['Physical Chemistry', 'Organic Chemistry']
+      },
+      'Mathematics': {
+        'Algebra': ['Calculus', 'Geometry'],
+        'Calculus': ['Algebra', 'Geometry'],
+        'Geometry': ['Algebra', 'Calculus']
+      },
+      'Biology': {
+        'Human Physiology': ['Biology', 'Human Anatomy'],
+        'Biology': ['Human Physiology', 'Human Anatomy'],
+        'Human Anatomy': ['Human Physiology', 'Biology']
+      }
+    };
+
+    return relatedChapters[subjectName] || {};
   }
 
   // Get chapter-wise resources
@@ -444,6 +546,35 @@ export class JeeNeetService {
             url: `https://unacademy.com/class/${chapter.toLowerCase().replace(' ', '-')}`,
             teacher: 'Gaurav Gupta',
             rating: 4.6
+          }
+        ],
+        youtubeVideos: [
+          {
+            title: `${chapter} - Complete Concept`,
+            source: 'Eduniti',
+            duration: '1:20:00',
+            url: `https://www.youtube.com/watch?v=${this.generateYouTubeId(chapter, 'eduniti')}`,
+            teacher: 'Mohit Tyagi',
+            rating: 4.9,
+            description: 'Excellent explanation by Mohit Tyagi Sir'
+          },
+          {
+            title: `${chapter} - Problem Solving`,
+            source: 'Physics Galaxy',
+            duration: '1:45:00',
+            url: `https://www.youtube.com/watch?v=${this.generateYouTubeId(chapter, 'physicsgalaxy')}`,
+            teacher: 'Ashish Arora',
+            rating: 4.8,
+            description: 'Advanced problem-solving techniques'
+          },
+          {
+            title: `${chapter} - Quick Revision`,
+            source: 'Khan Academy',
+            duration: '45:00',
+            url: `https://www.youtube.com/watch?v=${this.generateYouTubeId(chapter, 'khanacademy')}`,
+            teacher: 'Khan Academy',
+            rating: 4.5,
+            description: 'Clear and concise revision'
           }
         ],
         notes: [
@@ -477,11 +608,26 @@ export class JeeNeetService {
             url: `https://unacademy.com/practice/${chapter.toLowerCase().replace(' ', '-')}`,
             rating: 4.4
           }
-        ]
+        ],
+        relatedChapters: this.getRelatedChapters(examType, subject)[chapter] || []
       };
 
       return chapterResources;
     });
+  }
+
+  // Generate YouTube video ID (placeholder function)
+  generateYouTubeId(chapter, channel) {
+    const channelIds = {
+      'eduniti': 'UC7cs8q-gJRlGwj4A8OmCmXg',
+      'physicsgalaxy': 'UCZkq71wQmOFmsIZufmC1Oug',
+      'chemistryguruji': 'UCQqy7Ooj5VOHzRabcMMedzw',
+      'mathongo': 'UCrC8mOqJQpoBHYNuHUTD7Qw',
+      'khanacademy': 'UC4a-Gbdw7vOaccHmFo40b9g'
+    };
+    
+    const chapterHash = chapter.toLowerCase().replace(/[^a-z0-9]/g, '').substring(0, 8);
+    return `${channelIds[channel] || 'UC7cs8q-gJRlGwj4A8OmCmXg'}_${chapterHash}`;
   }
 
   // Get study plan based on exam date

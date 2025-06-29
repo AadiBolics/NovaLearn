@@ -382,4 +382,115 @@
     flex-direction: column;
     gap: 1.5rem;
   }
+}
+
+/* Add or update these styles for better legibility and glassy effect */
+
+.subject-card {
+  background: rgba(30, 30, 30, 0.7);
+  color: #fff;
+  border-radius: 16px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.18);
+  border: 1.5px solid rgba(255,255,255,0.12);
+  margin-bottom: 1.5rem;
+  transition: box-shadow 0.3s, border 0.3s, background 0.3s;
+}
+.subject-card.active, .subject-card:hover {
+  background: rgba(40, 40, 40, 0.95);
+  border: 1.5px solid #fff;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+}
+.subject-header h4 {
+  color: #fff;
+}
+.subject-stats span {
+  color: #e9ecef;
+}
+.subject-progress .progress-bar {
+  background: rgba(255,255,255,0.08);
+  border-radius: 8px;
+}
+.subject-progress .progress-fill {
+  background: linear-gradient(90deg, #fff 0%, #adb5bd 100%);
+  border-radius: 8px;
+}
+
+.module-item {
+  background: rgba(20, 20, 20, 0.85);
+  color: #fff;
+  border-radius: 12px;
+  border: 1.5px solid rgba(255,255,255,0.10);
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.12);
+  transition: border 0.3s, background 0.3s;
+}
+.module-item.completed {
+  background: rgba(60, 180, 75, 0.18);
+  border: 1.5px solid #28a745;
+  color: #fff;
+}
+.module-item.selected, .module-item:hover {
+  border: 1.5px solid #fff;
+  background: rgba(40, 40, 40, 0.98);
+}
+.module-header h5 {
+  color: #fff;
+}
+.module-badges span {
+  color: #fff;
+  font-weight: 500;
+  border-radius: 8px;
+  padding: 0.15rem 0.7rem;
+  margin-right: 0.5rem;
+  font-size: 0.85rem;
+  background: rgba(255,255,255,0.12);
+}
+.difficulty-badge {
+  background: #343a40 !important;
+}
+.priority-badge {
+  background: #212529 !important;
+}
+.weightage-badge {
+  background: #495057 !important;
+}
+.module-description {
+  color: #e9ecef;
+}
+.module-details {
+  background: rgba(255,255,255,0.04);
+  border-radius: 8px;
+  padding: 1rem;
+  margin-top: 0.5rem;
+  color: #fff;
+}
+.topics-section h6 {
+  color: #fff;
+}
+.topic-tag {
+  background: rgba(255,255,255,0.12);
+  color: #fff;
+  border-radius: 6px;
+  padding: 0.2rem 0.7rem;
+  margin-right: 0.4rem;
+  font-size: 0.85rem;
+  display: inline-block;
+}
+.module-meta .meta-item {
+  color: #e9ecef;
+  margin-bottom: 0.3rem;
+}
+
+/* Ensure all text is readable on dark backgrounds */
+.learning-roadmap, .roadmap-header, .roadmap-container, .subjects-overview, .subjects-grid {
+  color: #fff;
+}
+
+.roadmap-error {
+  color: #fff;
+  background: rgba(220, 53, 69, 0.18);
+  border-radius: 12px;
+  padding: 1.5rem;
+  text-align: center;
+  margin: 2rem 0;
 } 
