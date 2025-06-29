@@ -1,176 +1,229 @@
 import React, { useState } from 'react';
-import { generateModules } from '../utils/gptService';
-import LoadingSpinner from './LoadingSpinner';
-import { getAvailableCareers } from '../data/syllabi';
+import { useNavigate } from 'react-router-dom';
+import { useModules } from '../context/useModules';
+import { jeeNeetService } from '../utils/jeeNeetService';
 import './OnboardingForm.css';
 
-const OnboardingForm = ({ onComplete }) => {
-  const [formData, setFormData] = useState({
-    interests: '',
-    careerGoal: '',
-    learningStyle: 'visual'
-  });
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState('');
+const OnboardingForm = () => {
+  const navigate = useNavigate();
+  const { setModules } = useModules();
+  const [selectedExam, setSelectedExam] = useState('');
+  const [showAnimation, setShowAnimation] = useState(false);
 
-  const availableCareers = getAvailableCareers();
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleExamSelect = async (examType) => {
+    setSelectedExam(examType);
+    setShowAnimation(true);
     
-    if (!formData.interests.trim() || !formData.careerGoal.trim()) {
-      setError('Please fill in all required fields.');
-      return;
-    }
+    // Add a small delay for the selection animation
+    setTimeout(async () => {
+      try {
+        // Get syllabus and create modules
+        const syllabusData = await jeeNeetService.getSyllabus(examType);
+        
+        // Create modules from syllabus
+        const modules = [];
+        Object.entries(syllabusData.syllabus.subjects).forEach(([subjectKey, subject]) => {
+          subject.chapters.forEach((chapter, index) => {
+            modules.push({
+              id: `${subjectKey}-${index}`,
+              title: chapter.name,
+              description: `${chapter.name} - ${chapter.topics.join(', ')}`,
+              subject: subject.name,
+              weightage: chapter.weightage,
+              difficulty: chapter.difficulty,
+              priority: chapter.priority,
+              topics: chapter.topics,
+              examType: examType,
+              targetYear: '2025',
+              currentLevel: 'beginner',
+              studyHours: '2-4'
+            });
+          });
+        });
 
-    setIsLoading(true);
-    setError('');
+        // Sort modules by priority and weightage
+        modules.sort((a, b) => {
+          const priorityOrder = { 'very_high': 4, 'high': 3, 'medium': 2, 'low': 1 };
+          return priorityOrder[b.priority] - priorityOrder[a.priority] || b.weightage - a.weightage;
+        });
 
-    try {
-      const modules = await generateModules(
-        formData.interests,
-        formData.careerGoal,
-        formData.learningStyle
-      );
-      
-      onComplete(modules);
-    } catch (err) {
-      console.error('Error generating modules:', err);
-      setError('Failed to generate learning modules. Please try again.');
-    } finally {
-      setIsLoading(false);
-    }
+        setModules(modules);
+        navigate('/dashboard');
+      } catch (error) {
+        console.error('Error creating learning path:', error);
+        // Fallback to basic modules
+        const fallbackModules = [
+          {
+            id: 'physics-1',
+            title: 'Physics Fundamentals',
+            description: 'Core physics concepts for JEE/NEET',
+            subject: 'Physics',
+            weightage: 25,
+            difficulty: 'medium',
+            priority: 'high',
+            examType: examType,
+            targetYear: '2025',
+            currentLevel: 'beginner',
+            studyHours: '2-4'
+          },
+          {
+            id: 'chemistry-1',
+            title: 'Chemistry Basics',
+            description: 'Essential chemistry topics',
+            subject: 'Chemistry',
+            weightage: 25,
+            difficulty: 'medium',
+            priority: 'high',
+            examType: examType,
+            targetYear: '2025',
+            currentLevel: 'beginner',
+            studyHours: '2-4'
+          }
+        ];
+        setModules(fallbackModules);
+        navigate('/dashboard');
+      }
+    }, 800);
   };
-
-  if (isLoading) {
-    return (
-      <div className="onboarding-container">
-        <div className="loading-section">
-          <LoadingSpinner />
-          <h2>Creating Your Personalized Learning Path</h2>
-          <p>Analyzing your interests and career goals...</p>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="onboarding-container">
-      <div className="onboarding-content">
-        <div className="onboarding-header">
-          <h1>Welcome to NovaLearn</h1>
-          <p>Your AI-powered personalized learning journey starts here</p>
+      <div className="onboarding-background">
+        <div className="floating-shapes">
+          <div className="shape shape-1">📚</div>
+          <div className="shape shape-2">🎯</div>
+          <div className="shape shape-3">⚡</div>
+          <div className="shape shape-4">🏆</div>
+          <div className="shape shape-5">💡</div>
+        </div>
+      </div>
+
+      <div className={`onboarding-card ${showAnimation ? 'animate' : ''}`}>
+        <div className="card-header">
+          <div className="logo-section">
+            <div className="logo-icon">🚀</div>
+            <h1 className="app-title">NovaLearn</h1>
+          </div>
+          <p className="app-subtitle">Your AI-powered JEE/NEET preparation companion</p>
         </div>
 
-        <form onSubmit={handleSubmit} className="onboarding-form">
-          <div className="form-section">
-            <label htmlFor="interests" className="form-label">
-              What are your main interests and passions? *
-            </label>
-            <textarea
-              id="interests"
-              name="interests"
-              value={formData.interests}
-              onChange={handleInputChange}
-              className="form-control"
-              placeholder="e.g., I love building websites, solving complex problems, working with data, creating mobile apps..."
-              rows="4"
-              required
-            />
-            <small className="form-help">
-              Tell us what excites you and what you'd like to learn more about
-            </small>
-          </div>
+        {!showAnimation ? (
+          <div className="exam-selection">
+            <div className="selection-header">
+              <h2>Choose Your Exam</h2>
+              <p>Select the exam you're preparing for to get started</p>
+            </div>
 
-          <div className="form-section">
-            <label htmlFor="careerGoal" className="form-label">
-              What's your career goal? *
-            </label>
-            <select
-              id="careerGoal"
-              name="careerGoal"
-              value={formData.careerGoal}
-              onChange={handleInputChange}
-              className="form-control"
-              required
-            >
-              <option value="">Select your career goal</option>
-              {availableCareers.map(career => (
-                <option key={career.id} value={career.id}>
-                  {career.title}
-                </option>
-              ))}
-            </select>
-            <small className="form-help">
-              Choose the career path you want to pursue
-            </small>
-          </div>
-
-          <div className="form-section">
-            <label className="form-label">How do you prefer to learn? *</label>
-            <div className="learning-style-options">
-              <label className="style-option">
-                <input
-                  type="radio"
-                  name="learningStyle"
-                  value="visual"
-                  checked={formData.learningStyle === 'visual'}
-                  onChange={handleInputChange}
-                />
-                <div className="option-content">
-                  <h4>Visual Learner</h4>
-                  <p>I learn best through diagrams, videos, and visual examples</p>
+            <div className="exam-options">
+              <div 
+                className={`exam-option ${selectedExam === 'jee' ? 'selected' : ''}`}
+                onClick={() => handleExamSelect('jee')}
+              >
+                <div className="exam-icon">⚡</div>
+                <div className="exam-content">
+                  <h3>JEE (Joint Entrance Examination)</h3>
+                  <p>For engineering aspirants - IITs, NITs, and other top engineering colleges</p>
+                  <div className="exam-details">
+                    <div className="detail-item">
+                      <span className="detail-label">Subjects:</span>
+                      <span className="detail-value">Physics, Chemistry, Mathematics</span>
+                    </div>
+                    <div className="detail-item">
+                      <span className="detail-label">Duration:</span>
+                      <span className="detail-value">3 hours</span>
+                    </div>
+                    <div className="detail-item">
+                      <span className="detail-label">Total Marks:</span>
+                      <span className="detail-value">300</span>
+                    </div>
+                  </div>
                 </div>
-              </label>
-
-              <label className="style-option">
-                <input
-                  type="radio"
-                  name="learningStyle"
-                  value="hands-on"
-                  checked={formData.learningStyle === 'hands-on'}
-                  onChange={handleInputChange}
-                />
-                <div className="option-content">
-                  <h4>Hands-on Learner</h4>
-                  <p>I prefer practical exercises and building real projects</p>
+                <div className="selection-indicator">
+                  {selectedExam === 'jee' ? '✓' : '→'}
                 </div>
-              </label>
+              </div>
 
-              <label className="style-option">
-                <input
-                  type="radio"
-                  name="learningStyle"
-                  value="theoretical"
-                  checked={formData.learningStyle === 'theoretical'}
-                  onChange={handleInputChange}
-                />
-                <div className="option-content">
-                  <h4>Theoretical Learner</h4>
-                  <p>I like understanding concepts deeply before applying them</p>
+              <div 
+                className={`exam-option ${selectedExam === 'neet' ? 'selected' : ''}`}
+                onClick={() => handleExamSelect('neet')}
+              >
+                <div className="exam-icon">🏥</div>
+                <div className="exam-content">
+                  <h3>NEET (National Eligibility cum Entrance Test)</h3>
+                  <p>For medical aspirants - MBBS, BDS, and other medical courses</p>
+                  <div className="exam-details">
+                    <div className="detail-item">
+                      <span className="detail-label">Subjects:</span>
+                      <span className="detail-value">Physics, Chemistry, Biology</span>
+                    </div>
+                    <div className="detail-item">
+                      <span className="detail-label">Duration:</span>
+                      <span className="detail-value">3 hours 20 minutes</span>
+                    </div>
+                    <div className="detail-item">
+                      <span className="detail-label">Total Marks:</span>
+                      <span className="detail-value">720</span>
+                    </div>
+                  </div>
                 </div>
-              </label>
+                <div className="selection-indicator">
+                  {selectedExam === 'neet' ? '✓' : '→'}
+                </div>
+              </div>
+            </div>
+
+            <div className="features-preview">
+              <h3>What you'll get:</h3>
+              <div className="features-grid">
+                <div className="feature-item">
+                  <div className="feature-icon">📊</div>
+                  <span>Personalized Study Plan</span>
+                </div>
+                <div className="feature-item">
+                  <div className="feature-icon">🎯</div>
+                  <span>Priority-based Topics</span>
+                </div>
+                <div className="feature-item">
+                  <div className="feature-icon">📚</div>
+                  <span>Top Indian Resources</span>
+                </div>
+                <div className="feature-item">
+                  <div className="feature-icon">📈</div>
+                  <span>Progress Tracking</span>
+                </div>
+              </div>
             </div>
           </div>
-
-          {error && (
-            <div className="error-message">
-              {error}
+        ) : (
+          <div className="loading-section">
+            <div className="loading-animation">
+              <div className="loading-spinner"></div>
+              <div className="loading-text">
+                <h3>Creating Your Learning Path</h3>
+                <p>Analyzing {selectedExam.toUpperCase()} syllabus and preparing your personalized study plan...</p>
+              </div>
             </div>
-          )}
-
-          <button type="submit" className="submit-button">
-            Create My Learning Path
-          </button>
-        </form>
+            
+            <div className="loading-steps">
+              <div className="step-item">
+                <div className="step-icon">📋</div>
+                <span>Analyzing syllabus structure</span>
+              </div>
+              <div className="step-item">
+                <div className="step-icon">🎯</div>
+                <span>Prioritizing topics by weightage</span>
+              </div>
+              <div className="step-item">
+                <div className="step-icon">📚</div>
+                <span>Gathering learning resources</span>
+              </div>
+              <div className="step-item">
+                <div className="step-icon">✅</div>
+                <span>Finalizing your roadmap</span>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

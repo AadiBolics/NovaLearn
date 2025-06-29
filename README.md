@@ -1,94 +1,30 @@
 # NovaLearn - AI-Powered Personalized Learning Platform
 
-NovaLearn is a comprehensive learning platform that generates personalized learning paths based on user interests, career goals, and learning styles. It features curated syllabi, visual roadmaps, and free learning resources for various tech careers.
+NovaLearn is an intelligent learning platform that creates personalized educational roadmaps using AI. Whether you choose a predefined career path or enter any field of interest, our AI will research current trends, scrape the web for the latest resources, and generate a comprehensive learning syllabus tailored to your goals.
 
-## 🚀 Features
+## ✨ Features
 
-### 🎯 **Personalized Learning Paths**
-- AI-generated modules based on user interests and career goals
-- Comprehensive syllabus database for different career paths
-- Progressive learning structure from foundation to advanced
+### 🤖 AI-Powered Syllabus Generation
+- **Dynamic Field Analysis**: Enter any field of interest and let AI create a personalized learning path
+- **Web Scraping Integration**: Real-time research of current trends, technologies, and resources
+- **Comprehensive Roadmaps**: 4-module progressive learning paths with detailed resources and projects
+- **Current Market Insights**: Job market analysis, salary ranges, and industry trends
 
-### 📊 **Visual Learning Roadmap**
-- Interactive timeline showing learning phases
-- Detailed topic breakdowns with skills, projects, and resources
-- Progress tracking and completion status
+### 📚 Learning Management
+- **Interactive Modules**: Detailed learning modules with skills, resources, and projects
+- **Progress Tracking**: Visual progress indicators and completion tracking
+- **Resource Library**: Curated learning resources for each module
+- **Project-Based Learning**: Hands-on projects with clear deliverables
 
-### 📚 **Free Learning Resources Hub**
-- Curated collection of free learning resources
-- Filterable by resource type (courses, tutorials, documentation, books, videos)
-- Direct links to high-quality, free educational content
-
-### 🎨 **Modern UI/UX**
-- Clean, modern black and white design
-- Responsive layout for all devices
-- Google Sans-like typography (Inter font)
-- Fluid, full-screen layouts
-
-### 🔄 **Progress Tracking**
-- Real-time progress monitoring
-- Module completion tracking
-- Visual progress indicators
-
-## 🛠️ Tech Stack
-
-- **Frontend**: React 18 with Vite
-- **Routing**: React Router v6
-- **Styling**: CSS3 with custom design system
-- **State Management**: React Context API
-- **AI Integration**: OpenAI GPT-4 API
-- **UI Framework**: Bootstrap 5 (minimal usage)
-
-## 📁 Project Structure
-
-```
-NovaLearn/
-├── src/
-│   ├── components/
-│   │   ├── OnboardingForm.jsx      # User onboarding with career selection
-│   │   ├── ModuleCard.jsx          # Individual module display
-│   │   ├── LoadingSpinner.jsx      # Loading states
-│   │   └── LearningRoadmap.jsx     # Visual roadmap component
-│   ├── pages/
-│   │   ├── Dashboard.jsx           # Main dashboard with modules
-│   │   ├── ModuleDetail.jsx        # Detailed module view
-│   │   ├── Roadmap.jsx             # Learning roadmap page
-│   │   └── Resources.jsx           # Free resources hub
-│   ├── context/
-│   │   └── ModuleContext.jsx       # Global state management
-│   ├── data/
-│   │   └── syllabi.js              # Comprehensive syllabus database
-│   ├── utils/
-│   │   └── gptService.js           # OpenAI API integration
-│   └── styles/
-│       └── global.css              # Global styles and variables
-```
-
-## 🎓 Supported Career Paths
-
-### **Web Development**
-- HTML5, CSS3, JavaScript fundamentals
-- React, Node.js, Express
-- Full-stack development
-- Authentication, deployment, testing
-
-### **Data Science**
-- Python for data science
-- Statistics and mathematics
-- Machine learning fundamentals
-- Deep learning with TensorFlow/PyTorch
-- Natural language processing
-- Data engineering
-
-### **Mobile Development**
-- iOS development (Swift, SwiftUI)
-- Android development (Java, Kotlin, Jetpack Compose)
-- Cross-platform development (React Native, Flutter)
+### 🎯 Personalized Experience
+- **Learning Style Adaptation**: Visual, hands-on, or theoretical learning preferences
+- **Interest-Based Customization**: Tailored content based on your interests and goals
+- **Career Path Guidance**: Professional development and certification recommendations
 
 ## 🚀 Getting Started
 
 ### Prerequisites
-- Node.js 16+ 
+- Node.js (v16 or higher)
 - npm or yarn
 - OpenAI API key
 
@@ -96,8 +32,8 @@ NovaLearn/
 
 1. **Clone the repository**
    ```bash
-   git clone <repository-url>
-   cd NovaLearn
+   git clone https://github.com/yourusername/novalearn.git
+   cd novalearn
    ```
 
 2. **Install dependencies**
@@ -106,169 +42,128 @@ NovaLearn/
    ```
 
 3. **Set up environment variables**
-   ```bash
-   # Copy the example environment file
-   cp .env.example .env
+   Create a `.env` file in the root directory:
+   ```env
+   # Required for AI-powered features
+   VITE_OPENAI_API_KEY=your_openai_api_key_here
    
-   # Edit .env and add your OpenAI API key
-   VITE_OPENAI_API_KEY=your_actual_openai_api_key_here
+   # Optional - for enhanced web scraping
+   VITE_NEWS_API_KEY=your_news_api_key_here
+   VITE_GOOGLE_SEARCH_API_KEY=your_google_search_api_key_here
    ```
-   
-   **Important**: Never commit your `.env` file to version control. It's already included in `.gitignore`.
 
-4. **Get your OpenAI API key**
-   - Visit [OpenAI Platform](https://platform.openai.com/)
-   - Sign up or log in
-   - Go to API Keys section
-   - Create a new API key
-   - Copy the key and paste it in your `.env` file
-
-5. **Start the development server**
+4. **Start the development server**
    ```bash
    npm run dev
    ```
 
-6. **Open your browser**
-   - Navigate to `http://localhost:5173`
+5. **Open your browser**
+   Navigate to `http://localhost:5173`
+
+## 🔧 API Keys Setup
+
+### Required: OpenAI API Key
+1. Visit [OpenAI Platform](https://platform.openai.com/)
+2. Create an account and get your API key
+3. Add it to your `.env` file as `VITE_OPENAI_API_KEY`
+
+### Optional: News API Key
+1. Visit [NewsAPI](https://newsapi.org/)
+2. Sign up for a free account
+3. Get your API key and add it as `VITE_NEWS_API_KEY`
+
+### Optional: Google Search API Key
+1. Visit [Google Cloud Console](https://console.cloud.google.com/)
+2. Enable Custom Search API
+3. Create credentials and add as `VITE_GOOGLE_SEARCH_API_KEY`
 
 ## 📖 How to Use
 
-### 1. **Onboarding Process**
-- Fill out the onboarding form with your interests
-- Select your career goal from the dropdown
-- Choose your preferred learning style
-- Submit to generate personalized modules
+### 1. Choose Your Learning Approach
+- **Predefined Career Paths**: Select from curated career paths like Web Development, Data Science, etc.
+- **Custom Field (AI-Powered)**: Enter any field of interest and let AI research and create a personalized syllabus
 
-### 2. **Dashboard**
-- View your generated learning modules
-- Track progress with visual indicators
-- Access roadmap and resources
+### 2. Complete the Onboarding
+- Describe your interests and passions
+- Select your learning style preference
+- For custom fields, the AI will research current trends and create a comprehensive roadmap
 
-### 3. **Learning Roadmap**
-- Explore the visual learning path
-- Click on phases to see detailed topics
-- View skills, projects, and resources for each topic
+### 3. Follow Your Learning Path
+- Access your personalized dashboard with progress tracking
+- View field analysis and market insights
+- Explore detailed modules with resources and projects
+- Track your progress through the learning journey
 
-### 4. **Resources Hub**
-- Browse free learning resources
-- Filter by resource type
-- Access direct links to courses, tutorials, and documentation
+## 🏗️ Architecture
 
-### 5. **Module Details**
-- View comprehensive module information
-- Mark modules as complete
-- Access specific challenges and projects
+### Frontend
+- **React 18** with Vite for fast development
+- **React Router** for navigation
+- **Context API** for state management
+- **Bootstrap** for responsive UI components
 
-## 🎨 Design System
+### AI Integration
+- **OpenAI GPT-4** for intelligent syllabus generation
+- **Web Scraping Service** for current information gathering
+- **Dynamic Content Generation** based on user input
 
-### Color Palette
-- **Primary Black**: `#1a1a1a`
-- **Secondary Black**: `#2d2d2d`
-- **White**: `#ffffff`
-- **Light Gray**: `#f8f9fa`
-- **Border Gray**: `#e9ecef`
-- **Dark Gray**: `#6c757d`
-- **Accent Gray**: `#495057`
+### Data Management
+- **Local Storage** for user progress and preferences
+- **Context Providers** for state management
+- **Modular Architecture** for easy maintenance
 
-### Typography
-- **Font Family**: Inter (Google Sans-like)
-- **Weights**: 400, 500, 600, 700
-- **Responsive scaling**: Fluid typography
+## 📁 Project Structure
 
-## 🔧 Configuration
-
-### Environment Variables
-The app uses environment variables for configuration. Create a `.env` file in the root directory:
-
-```bash
-# Required: OpenAI API Key
-VITE_OPENAI_API_KEY=your_openai_api_key_here
+```
+src/
+├── components/          # Reusable UI components
+├── context/            # React context providers
+├── data/               # Static data and syllabi
+├── pages/              # Main application pages
+├── styles/             # Global styles and CSS
+├── utils/              # Utility functions and services
+│   ├── gptService.js   # OpenAI integration
+│   └── webScrapingService.js  # Web scraping functionality
+└── App.jsx             # Main application component
 ```
 
-### OpenAI API Configuration
-The app uses OpenAI's GPT-4 API for generating personalized learning modules. The API key is loaded from environment variables for security.
+## 🎨 Customization
 
-### Syllabus Customization
-Add new career paths by updating `src/data/syllabi.js`:
+### Adding New Career Paths
+Edit `src/data/syllabi.js` to add new predefined career paths with detailed roadmaps.
 
-```javascript
-export const syllabi = {
-  "new-career": {
-    title: "New Career Path",
-    description: "Description of the career path",
-    roadmap: [
-      // Define learning phases and topics
-    ]
-  }
-};
-```
+### Customizing AI Prompts
+Modify the prompts in `src/utils/gptService.js` to adjust how the AI generates learning paths.
 
-## 🚀 Deployment
-
-### Build for Production
-```bash
-npm run build
-```
-
-### Environment Variables in Production
-For production deployment, make sure to set the environment variables:
-
-**Vercel:**
-- Go to your project settings
-- Add environment variable: `VITE_OPENAI_API_KEY`
-- Set the value to your OpenAI API key
-
-**Netlify:**
-- Go to Site settings > Environment variables
-- Add: `VITE_OPENAI_API_KEY` with your API key value
-
-**Other platforms:**
-- Set the `VITE_OPENAI_API_KEY` environment variable
-- Ensure it's accessible to your build process
-
-### Deploy to Vercel
-1. Install Vercel CLI: `npm i -g vercel`
-2. Run: `vercel`
-3. Follow the prompts
-4. Set environment variables in Vercel dashboard
-
-### Deploy to Netlify
-1. Build the project: `npm run build`
-2. Upload the `dist` folder to Netlify
-3. Set environment variables in Netlify dashboard
-
-## 🔐 Security Notes
-
-- **Never commit API keys** to version control
-- The `.env` file is included in `.gitignore`
-- Use environment variables for all sensitive data
-- For production, use your platform's environment variable system
+### Styling
+Customize the appearance by modifying the CSS files in `src/styles/` and component-specific CSS files.
 
 ## 🤝 Contributing
 
 1. Fork the repository
-2. Create a feature branch: `git checkout -b feature-name`
-3. Copy `.env.example` to `.env` and add your API key
-4. Make your changes
-5. Commit changes: `git commit -m 'Add feature'`
-6. Push to branch: `git push origin feature-name`
-7. Submit a pull request
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
-## 📝 License
+## 📄 License
 
-This project is licensed under the MIT License.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## 🙏 Acknowledgments
 
-- OpenAI for GPT-4 API
-- Free learning resource providers
-- React and Vite communities
-- Bootstrap for UI components
+- OpenAI for providing the GPT-4 API
+- Bootstrap for the UI framework
+- React team for the amazing framework
+- All contributors and users of NovaLearn
 
 ## 📞 Support
 
-For support, email support@novalearn.com or create an issue in the repository.
+If you have any questions or need help, please:
+- Open an issue on GitHub
+- Check the documentation
+- Contact the development team
 
 ---
 
-**NovaLearn** - Empowering learners with AI-driven personalized education 🚀
+**Made with ❤️ for learners worldwide**

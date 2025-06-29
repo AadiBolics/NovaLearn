@@ -1,14 +1,6 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useState } from 'react';
 
 const ModuleContext = createContext();
-
-export const useModules = () => {
-  const context = useContext(ModuleContext);
-  if (!context) {
-    throw new Error('useModules must be used within a ModuleProvider');
-  }
-  return context;
-};
 
 export const ModuleProvider = ({ children }) => {
   const [modules, setModules] = useState([]);
@@ -35,12 +27,42 @@ export const ModuleProvider = ({ children }) => {
     setModules([]);
   };
 
+  const getModuleProgress = () => {
+    if (modules.length === 0) return 0;
+    const completedCount = modules.filter(module => module.completed).length;
+    return Math.round((completedCount / modules.length) * 100);
+  };
+
+  const getCurrentModule = () => {
+    return modules.find(module => !module.completed) || modules[modules.length - 1];
+  };
+
+  const getModulesBySubject = (subject) => {
+    return modules.filter(module => module.subject === subject);
+  };
+
+  const getModulesByPriority = (priority) => {
+    return modules.filter(module => module.priority === priority);
+  };
+
+  const getHighPriorityModules = () => {
+    return modules.filter(module => 
+      module.priority === 'very_high' || module.priority === 'high'
+    );
+  };
+
   const value = {
     modules,
+    setModules,
     addModules,
     updateModule,
     markModuleComplete,
-    clearModules
+    clearModules,
+    getModuleProgress,
+    getCurrentModule,
+    getModulesBySubject,
+    getModulesByPriority,
+    getHighPriorityModules
   };
 
   return (
@@ -48,4 +70,7 @@ export const ModuleProvider = ({ children }) => {
       {children}
     </ModuleContext.Provider>
   );
-}; 
+};
+
+// Export the context for use in the hook file
+export { ModuleContext }; 

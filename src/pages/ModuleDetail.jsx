@@ -1,34 +1,34 @@
 import React from 'react';
-import { useParams, useNavigate, Link } from 'react-router-dom';
-import { useModules } from '../context/ModuleContext';
+import { useParams, useNavigate } from 'react-router-dom';
+import { useModules } from '../context/useModules';
 import './ModuleDetail.css';
 
-const ModuleDetail = ({ onModuleComplete }) => {
-  const { id } = useParams();
+const ModuleDetail = () => {
+  const { moduleId } = useParams();
   const navigate = useNavigate();
-  const { modules } = useModules();
-  
-  const module = modules?.find(m => m.id === parseInt(id));
-  const currentIndex = modules?.findIndex(m => m.id === parseInt(id)) || 0;
-  const nextModule = modules?.[currentIndex + 1];
-  const prevModule = modules?.[currentIndex - 1];
+  const { modules, updateModule } = useModules();
+
+  const module = modules.find(m => m.id === moduleId);
 
   if (!module) {
     return (
-      <div className="module-detail-container">
-        <div className="completion-alert">
-          <h5>Module not found</h5>
+      <div className="module-detail-page">
+        <div className="error-container">
+          <h2>Module Not Found</h2>
           <p>The requested module could not be found.</p>
-          <Link to="/dashboard" className="nav-button secondary">
+          <button 
+            className="back-button"
+            onClick={() => navigate('/dashboard')}
+          >
             Back to Dashboard
-          </Link>
+          </button>
         </div>
       </div>
     );
   }
 
   const handleMarkComplete = () => {
-    onModuleComplete(module.id);
+    updateModule(moduleId, { completed: true });
     navigate('/dashboard');
   };
 
@@ -36,111 +36,139 @@ const ModuleDetail = ({ onModuleComplete }) => {
     navigate('/dashboard');
   };
 
-  const handleNextModule = () => {
-    if (nextModule) {
-      navigate(`/module/${nextModule.id}`);
-    }
-  };
-
-  const handlePrevModule = () => {
-    if (prevModule) {
-      navigate(`/module/${prevModule.id}`);
-    }
+  const handleBackToRoadmap = () => {
+    navigate('/roadmap');
   };
 
   return (
-    <div className="module-detail-container">
+    <div className="module-detail-page">
       <div className="module-detail-header">
-        <h1>{module.title}</h1>
-      </div>
-      
-      {module.completed && (
-        <div className="completion-alert">
-          <h5>🎉 Module Completed!</h5>
-          <p>Congratulations! You have successfully completed this module.</p>
-        </div>
-      )}
-      
-      <div className="module-detail-card">
-        <div className="card-body">
-          <div className="section-content">
-            <h5 className="section-title">Description</h5>
-            <p className="module-description">{module.description}</p>
-          </div>
+        <div className="header-content">
+          <button 
+            className="back-button"
+            onClick={handleBackToDashboard}
+          >
+            ← Back to Dashboard
+          </button>
           
-          <div className="section-content">
-            <h5 className="section-title">Challenge</h5>
-            <div className="challenge-section">
-              <div className="challenge-label">Your Mission:</div>
-              <p className="challenge-text">{module.challenge}</p>
+          <div className="header-info">
+            <h1>{module.name}</h1>
+            <p>{module.subject} • {module.difficulty} • {module.weightage}% weightage</p>
+          </div>
+        </div>
+      </div>
+
+      <div className="module-detail-content">
+        <div className="module-overview">
+          <div className="overview-card">
+            <h2>Module Overview</h2>
+            <p className="module-description">{module.description}</p>
+            
+            <div className="module-meta">
+              <div className="meta-item">
+                <span className="meta-label">Subject:</span>
+                <span className="meta-value">{module.subject}</span>
+              </div>
+              <div className="meta-item">
+                <span className="meta-label">Difficulty:</span>
+                <span className="meta-value">{module.difficulty}</span>
+              </div>
+              <div className="meta-item">
+                <span className="meta-label">Weightage:</span>
+                <span className="meta-value">{module.weightage}%</span>
+              </div>
+              <div className="meta-item">
+                <span className="meta-label">Status:</span>
+                <span className={`meta-value status ${module.completed ? 'completed' : 'in-progress'}`}>
+                  {module.completed ? 'Completed' : 'In Progress'}
+                </span>
+              </div>
             </div>
           </div>
+        </div>
 
-          <div className="section-content">
-            <h5 className="section-title">Learning Objectives</h5>
+        <div className="module-content">
+          <div className="content-section">
+            <h2>Learning Objectives</h2>
             <ul className="objectives-list">
-              <li>Understand core concepts and principles</li>
-              <li>Practice with hands-on exercises</li>
-              <li>Complete the final challenge project</li>
-              <li>Apply knowledge to real-world scenarios</li>
+              {module.objectives?.map((objective, index) => (
+                <li key={index}>{objective}</li>
+              )) || [
+                'Understand core concepts and principles',
+                'Apply theoretical knowledge to practical problems',
+                'Develop problem-solving skills',
+                'Prepare for exam-specific questions'
+              ].map((objective, index) => (
+                <li key={index}>{objective}</li>
+              ))}
             </ul>
           </div>
 
-          <div className="section-content">
-            <h5 className="section-title">Estimated Time</h5>
-            <div className="time-estimate">
-              <p>This module typically takes 2-4 hours to complete.</p>
+          <div className="content-section">
+            <h2>Key Topics</h2>
+            <div className="topics-grid">
+              {module.topics?.map((topic, index) => (
+                <div key={index} className="topic-card">
+                  <h4>{topic.name}</h4>
+                  <p>{topic.description}</p>
+                </div>
+              )) || [
+                { name: 'Core Concepts', description: 'Fundamental principles and theories' },
+                { name: 'Problem Solving', description: 'Application of concepts to solve problems' },
+                { name: 'Practice Questions', description: 'Exam-style questions and solutions' }
+              ].map((topic, index) => (
+                <div key={index} className="topic-card">
+                  <h4>{topic.name}</h4>
+                  <p>{topic.description}</p>
+                </div>
+              ))}
             </div>
           </div>
 
-          {!module.completed && (
-            <div className="section-content">
-              <div className="ready-alert">
-                <h5>Ready to start?</h5>
-                <p>Take your time to go through the content and complete the challenge.</p>
+          <div className="content-section">
+            <h2>Study Resources</h2>
+            <div className="resources-list">
+              <div className="resource-item">
+                <span className="resource-icon">📖</span>
+                <div className="resource-info">
+                  <h4>Textbook References</h4>
+                  <p>NCERT and standard reference books for comprehensive understanding</p>
+                </div>
+              </div>
+              <div className="resource-item">
+                <span className="resource-icon">🎥</span>
+                <div className="resource-info">
+                  <h4>Video Lectures</h4>
+                  <p>Online lectures from top educators and coaching institutes</p>
+                </div>
+              </div>
+              <div className="resource-item">
+                <span className="resource-icon">📝</span>
+                <div className="resource-info">
+                  <h4>Practice Questions</h4>
+                  <p>Previous year questions and practice tests</p>
+                </div>
               </div>
             </div>
-          )}
+          </div>
         </div>
-        <div className="card-footer">
-          <div className="navigation-buttons">
-            <div className="left-buttons">
+
+        <div className="module-actions">
+          <div className="action-buttons">
+            {!module.completed && (
               <button 
-                className="nav-button secondary"
-                onClick={handleBackToDashboard}
+                className="complete-button"
+                onClick={handleMarkComplete}
               >
-                ← Dashboard
+                Mark as Complete
               </button>
-              
-              {prevModule && (
-                <button 
-                  className="nav-button outline"
-                  onClick={handlePrevModule}
-                >
-                  ← Previous
-                </button>
-              )}
-            </div>
-            
-            <div className="right-buttons">
-              {!module.completed && (
-                <button 
-                  className="nav-button success"
-                  onClick={handleMarkComplete}
-                >
-                  Mark as Complete
-                </button>
-              )}
-              
-              {nextModule && (
-                <button 
-                  className="nav-button outline"
-                  onClick={handleNextModule}
-                >
-                  Next →
-                </button>
-              )}
-            </div>
+            )}
+            <button 
+              className="roadmap-button"
+              onClick={handleBackToRoadmap}
+            >
+              View Full Roadmap
+            </button>
           </div>
         </div>
       </div>
